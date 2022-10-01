@@ -36,7 +36,7 @@ def get_html(link, wait_time):
     options.add_argument('--enable-javascript')
     options.add_argument(
         "--user-agent='Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:72.0) Gecko/20100101 Firefox/72.0'")
-    driver = webdriver.Chrome(service=Service('/Users/foxmac/Desktop/chromedriver'), options=options)
+    driver = webdriver.Chrome(service=Service('driver/chromedriver'), options=options)
     driver.get(link)
     time.sleep(wait_time)
     full_html = driver.page_source
@@ -46,24 +46,24 @@ def get_html(link, wait_time):
 
 
 page_counter = 1
-while len(list_of_os) <= 100:
-    soup = get_html(f'https://www.ozon.ru/category/smartfony-15502/?page={page_counter}&sorting=rating',
-                    12)
-    div = soup.find('div', attrs={"data-widget": "megaPaginator"})
-    links = set()
-    for a in div.find_all('a', href=True):
-        if '/product/smartfon' in a['href'] and 'comments' not in a['href']:
-            links.add(a['href'])
+soup = get_html(f'https://www.ozon.ru/category/smartfony-15502/?page={page_counter}&sorting=rating',
+                12)
+div = soup.find('div', attrs={"data-widget": "megaPaginator"})
+links = set()
+for a in div.find_all('a', href=True):
+    if '/product/smartfon' in a['href'] and 'comments' not in a['href']:
+        links.add(a['href'])
 
-    for link in list(links):
-        api_link = f'https://www.ozon.ru/api/composer-api.bx/page/json/v2?url=' \
-                   f'{link}%26layout_container%3DpdpPage2column%26layout_page_index%3D2%26sh%3DS1Doouzrjw'
-        soup = get_html(api_link, 4)
-        json_data = soup.find('pre').string
-        array_from_api = json.loads(json_data)
-        try_eval(array_from_api)
-        print(list_of_os)
-    page_counter += 1
-
-res = sorted(list(list_of_os), reverse=True)
-print(res)
+for link in list(links):
+    api_link = f'https://www.ozon.ru/api/composer-api.bx/page/json/v2?url=' \
+               f'{link}%26layout_container%3DpdpPage2column%26layout_page_index%3D2%26sh%3DS1Doouzrjw'
+    soup = get_html(api_link, 4)
+    json_data = soup.find('pre').string
+    array_from_api = json.loads(json_data)
+    try_eval(array_from_api)
+    if len(list_of_os) >= 100:
+        result = sorted(list(set(list_of_os)), reverse=True)
+        print(result)
+        exit()
+    print(list_of_os)
+page_counter += 1
