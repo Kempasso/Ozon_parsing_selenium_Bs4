@@ -67,3 +67,6 @@ for link in list(links):
         exit()
     print(list_of_os)
 page_counter += 1
+
+
+# Насколько я понял, с июля 2022 на ozon стоит защита cloudlare, спарсить данные у меня получилось только в подобной связке
