@@ -36,6 +36,7 @@ def get_html(link, wait_time):
     options.add_argument('--enable-javascript')
     options.add_argument(
         "--user-agent='Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:72.0) Gecko/20100101 Firefox/72.0'")
+    # Chromedriver загруженный с GitHub не работает, нужно скачивать и указывать путь к нему
     driver = webdriver.Chrome(service=Service('./chromedriver'), options=options)
     driver.get(link)
     time.sleep(wait_time)
